@@ -39,11 +39,6 @@
     ],
     "configuration": {
       "properties": {
-        "poetryMonorepo.appendExtraPaths": {
-          "type": "boolean",
-          "default": false,
-          "description": "Option to append the extra path instead of replacing. set true to retail any extraPaths you need"
-        }
       }
     }
   },
