@@ -64,38 +64,13 @@ async function setPythonInterpreter(poetryPath: string, poetryPackagePath: strin
     const currentInterpreter = pythonExtension.environments.getActiveEnvironmentPath().path
     if (pythonInterpreterPath !== currentInterpreter && fs.existsSync(pythonInterpreterPath)) {
         await pythonExtension.environments.updateActiveEnvironmentPath(pythonInterpreterPath);
-
-        const appendExtraPath = vscode.workspace.getConfiguration('poetryMonorepo').get('appendExtraPaths');
-        if (appendExtraPath) {
-            setExtraPathsAppend(poetryPackagePath, workspaceFolder.uri.fsPath);
-        } else {
-            setExtraPaths(poetryPackagePath, workspaceFolder.uri.fsPath);
-        }
-        vscode.window.showInformationMessage(`Python interpreter and extra path changed.\n\nInterpreter: ${pythonInterpreterPath}.\n\nPath: ${poetryPackagePath}`)
+	    
+        vscode.window.showInformationMessage(`Python interpreter\n\nInterpreter: ${pythonInterpreterPath}.\n\n`)
 
         // vscode.workspace.getConfiguration('python').update('defaultInterpreterPath', pythonInterpreterPath).then(_ => {
         //     vscode.commands.executeCommand('python.setInterpreter')
         // });
     }
-}
-
-function setExtraPathsAppend(packagePath: string, workspaceRoot: string) {
-    const packageRelativePath = path.relative(workspaceRoot, packagePath);
-    const pythonConfig = vscode.workspace.getConfiguration('python')
-    let extraPaths: string[] = pythonConfig.get('analysis.extraPaths') || [];
-    const index = extraPaths.indexOf(packageRelativePath)
-    if (index < 0) {
-        extraPaths.unshift(packageRelativePath)
-    } else if (index > 0) {
-        extraPaths = extraPaths.filter(path => path !== packageRelativePath)
-        extraPaths.unshift(packageRelativePath)
-    }
-    pythonConfig.update('analysis.extraPaths', extraPaths)
-}
-
-function setExtraPaths(packagePath: string, workspaceRoot: string) {
-    const packageRelativePath = path.relative(workspaceRoot, packagePath);
-    vscode.workspace.getConfiguration('python').update('analysis.extraPaths', [packageRelativePath])
 }
 
 // This method is called when your extension is deactivated
